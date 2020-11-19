@@ -13,15 +13,9 @@ from models.yolo import *
 from models.experimental import attempt_load
 from utils.datasets import LoadStreams, LoadImages
 
-from utils.torch_utils import *
-
-from utils.general import *
-# from utils.general import (
-#    check_img_size, non_max_suppression, apply_classifier, scale_coords,
-#    xyxy2xywh, plot_one_box, strip_optimizer, set_logging, center_of_rect)
+from utils.general import (check_img_size, non_max_suppression, apply_classifier, scale_coords, xyxy2xywh, plot_one_box,
+                           strip_optimizer, set_logging, center_of_rect, area_of_rect)
 from utils.torch_utils import select_device, load_classifier, time_synchronized
-
-
 
 
 def detect(save_img=False):
@@ -90,6 +84,7 @@ def detect(save_img=False):
         # Process detections
         for i, det in enumerate(pred):  # detections per image
             if webcam:  # batch_size >= 1
+                r.update_sensor()
                 p, s, im0 = path[i], '%g: ' % i, im0s[i].copy()
             else:
                 p, s, im0 = path, '', im0s
@@ -157,7 +152,7 @@ def detect(save_img=False):
 
 
 if __name__ == '__main__':
-    r = RobotControl(port="COM5")
+    r = RobotControl(port="COM2")
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', nargs='+', type=str, default='weight.pt', help='model.pt path(s)')
     parser.add_argument('--source', type=str, default='0', help='source')  # file/folder, 0 for webcam
@@ -168,7 +163,8 @@ if __name__ == '__main__':
     parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
     parser.add_argument('--view-img', action='store_true', help='display results')
     parser.add_argument('--save-txt', action='store_true', help='save results to *.txt')
-    parser.add_argument('--classes', nargs='+', type=int, default= 0+1, help='filter by class: --class 0, or --class 0 2 3')
+    parser.add_argument('--classes', nargs='+', type=int, default=0 + 1,
+                        help='filter by class: --class 0, or --class 0 2 3')
     parser.add_argument('--agnostic-nms', action='store_true', help='class-agnostic NMS')
     parser.add_argument('--augment', action='store_true', help='augmented inference')
     parser.add_argument('--update', action='store_true', help='update all models')

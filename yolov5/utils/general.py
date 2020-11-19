@@ -980,6 +980,13 @@ def center_of_rect(x):
 
     return center_point
 
+def area_of_rect(x):
+    tl, br = (int(x[0]), int(x[1])), (int(x[2]), int(x[3]))
+
+    area = ((br[1] - tl[1]) * (tl[0] - br[0]))
+
+    return area
+
 
 def plot_one_box(x, img, color=None, label=None, line_thickness=None):
     # Plots one bounding box on image img
